@@ -1,11 +1,15 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
-use App\Http\Controllers\PostController;
+use Illuminate\Support\Facades\Gate;
 
-Route::get('/post/create', [PostController::class, 'create'])->name('post.create');
-Route::post('/post/store', [PostController::class, 'store'])->name('post.store');
+Route::get('/admin', function () {
+    if (Gate::allows('access-admin-panel')) return 'Welcome to admin panel!';
+    abort(403);
+})->middleware(['auth']);
 
 Route::get('/', function () {
-    return view('welcome');
+    return ['Laravel' => app()->version()];
 });
+
+require __DIR__.'/auth.php';
